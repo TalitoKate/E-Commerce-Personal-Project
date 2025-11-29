@@ -7,6 +7,8 @@ import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { Suspense } from "react"
 
+
+
 const getMostPopularProducts = cache(
   () => {
     return db.product.findMany({
@@ -49,6 +51,7 @@ function ProductGridSection({
   title,
 }: ProductGridSectionProps) {
   return (
+    
     <div className="space-y-4">
       <div className="flex gap-4">
         <h2 className="text-3xl font-bold">{title}</h2>
