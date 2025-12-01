@@ -6,6 +6,7 @@ import { Product } from "@prisma/client"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { Suspense } from "react"
+import CurvedLoop from "@/components/ui/CurvedLoop";
 
 
 
@@ -32,6 +33,18 @@ const getNewestProducts = cache(() => {
 export default function HomePage() {
   return (
     <main className="space-y-12">
+      <div className="flex justify-center">
+              <CurvedLoop
+                marqueeText="Start ✦ Your ✦ Journey ✦ With ✦ Us ✦"
+                className="fill-black"      // base text color
+                starColor="#483d8b"          // star color
+                speed={3}
+                curveAmount={250}
+                direction="right"
+                interactive
+              />
+      </div>
+
       <ProductGridSection
         title="Most Popular"
         productsFetcher={getMostPopularProducts}

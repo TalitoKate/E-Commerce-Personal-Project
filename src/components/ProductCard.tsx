@@ -10,6 +10,8 @@ import {
 import { Button } from "./ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import StarBorder from '@/components/ui/StarBorder'
+
 
 type ProductCardProps = {
   id: string
@@ -28,6 +30,13 @@ export function ProductCard({
 }: ProductCardProps) {
   return (
     <Card className="flex overflow-hidden flex-col">
+      <StarBorder
+        as="div"
+        className="custom-class"
+        thickness={3}
+        color="#9932cc"
+        speed="5s"
+        >
       <div className="relative w-full h-auto aspect-video">
         <Image src={imagePath} fill alt={name} />
       </div>
@@ -43,6 +52,7 @@ export function ProductCard({
           <Link href={`/products/${id}/purchase`}>Purchase</Link>
         </Button>
       </CardFooter>
+      </StarBorder>
     </Card>
   )
 }

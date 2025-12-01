@@ -22,6 +22,7 @@ const config = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
+
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,12 +58,40 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+
+      borderColor: {
+        border: "hsl(var(--border))",
+      },
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+
+      /* ⭐⭐ HERE ARE THE STAR ANIMATIONS ⭐⭐ */
+      animation: {
+        "star-movement-bottom":
+          "star-movement-bottom linear infinite alternate",
+        "star-movement-top":
+          "star-movement-top linear infinite alternate",
+
+        // keep existing
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+
       keyframes: {
+        "star-movement-bottom": {
+          "0%": { transform: "translate(0%, 0%)", opacity: "1" },
+          "100%": { transform: "translate(-100%, 0%)", opacity: "0" },
+        },
+        "star-movement-top": {
+          "0%": { transform: "translate(0%, 0%)", opacity: "1" },
+          "100%": { transform: "translate(100%, 0%)", opacity: "0" },
+        },
+
+        // keep existing
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -71,10 +100,6 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },

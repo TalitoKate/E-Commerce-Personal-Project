@@ -5,10 +5,12 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ComponentProps, ReactNode } from "react"
 import Aurora from "@/components/ui/Aurora"
+import CurvedLoop from "@/components/ui/CurvedLoop";
 
 export function Nav({ children }: { children: ReactNode }) {
   return (
-    <nav className="relative flex justify-center px-4 py-6 mb-24 items-center text-primary-foreground">
+    <nav className="relative flex justify-center px-4 py-6  items-center text-primary-foreground">
+      
       {/* Aurora background that extends down into the page */}
       <div className="absolute inset-x-0 top-0 h-[260px] -z-10 pointer-events-none">
         <Aurora
@@ -18,11 +20,13 @@ export function Nav({ children }: { children: ReactNode }) {
           speed={0.5}
         />
       </div>
+      
 
       {/* Content on top (unchanged behavior) */}
       <div className="relative z-10 flex items-center">
         {children}
       </div>
+      
     </nav>
   )
 }

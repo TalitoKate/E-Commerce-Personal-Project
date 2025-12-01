@@ -2,6 +2,7 @@ import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard"
 import db from "@/db/db"
 import { cache } from "@/lib/cache"
 import { Suspense } from "react"
+import GradientText from '@/components/ui/GradientText'
 
 const getProducts = cache(() => {
   return db.product.findMany({
@@ -12,7 +13,16 @@ const getProducts = cache(() => {
 
 export default function ProductsPage() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div>
+    <GradientText 
+      colors={["#000000", "#483d8b", "#4b0082", "#000000", "#000000"]}
+      animationSpeed={8}
+      showBorder={false}
+      className="text-4xl md:text-6xl font-semibold mb-10"
+    >
+      Discover our products
+    </GradientText>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-100">
       <Suspense
         fallback={
           <>
@@ -27,6 +37,7 @@ export default function ProductsPage() {
       >
         <ProductsSuspense />
       </Suspense>
+    </div>
     </div>
   )
 }
