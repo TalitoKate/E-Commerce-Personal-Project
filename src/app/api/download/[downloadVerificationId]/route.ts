@@ -1,4 +1,4 @@
-// src/app/products/download/[downloadVerificationId]/route.ts
+// src/app/api/download/[downloadVerificationId]/route.ts
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -34,7 +34,6 @@ export async function GET(
 
     const relativePath = data.product.filePath;
 
-    // Resolve to absolute path relative to project root
     const absolutePath = path.isAbsolute(relativePath)
       ? relativePath
       : path.join(process.cwd(), relativePath);
@@ -52,7 +51,7 @@ export async function GET(
     });
   } catch (err) {
     console.error(
-      "Error in /products/download/[downloadVerificationId] route:",
+      "Error in /api/download/[downloadVerificationId] route:",
       err
     );
     return NextResponse.redirect(
