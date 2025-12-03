@@ -21,10 +21,11 @@ export async function GET(
     }
 
     const { size } = await fs.stat(data.product.filePath)
-    const file = await fs.readFile(data.product.filePath)
+    const fileBuffer = await fs.readFile(data.product.filePath)
+    const body = new Uint8Array(fileBuffer)
     const extension = data.product.filePath.split(".").pop()
 
-    return new NextResponse(file, {
+    return new NextResponse(body, {
       headers: {
         "Content-Disposition": `attachment; filename=\"${data.product.name}.${extension}\"`,
         "Content-Length": size.toString(),
