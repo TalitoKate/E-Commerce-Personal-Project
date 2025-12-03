@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import db from "@/db/db"
 import { notFound } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
