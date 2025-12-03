@@ -42,44 +42,49 @@ export default function OrdersPage() {
 }
 
 async function OrdersTable() {
-  const orders = await getOrders()
+  try {
+    const orders = await getOrders()
 
-  if (orders.length === 0) return <p>No sales found</p>
+    if (orders.length === 0) return <p>No sales found</p>
 
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Product</TableHead>
-          <TableHead>Customer</TableHead>
-          <TableHead>Price Paid</TableHead>
-          <TableHead className="w-0">
-            <span className="sr-only">Actions</span>
-          </TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {orders.map(order => (
-          <TableRow key={order.id}>
-            <TableCell>{order.product.name}</TableCell>
-            <TableCell>{order.user.email}</TableCell>
-            <TableCell>
-              {formatCurrency(order.pricePaidInCents / 100)}
-            </TableCell>
-            <TableCell className="text-center">
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <MoreVertical />
-                  <span className="sr-only">Actions</span>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DeleteDropDownItem id={order.id} />
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
+    return (
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Product</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>Price Paid</TableHead>
+            <TableHead className="w-0">
+              <span className="sr-only">Actions</span>
+            </TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  )
+        </TableHeader>
+        <TableBody>
+          {orders.map(order => (
+            <TableRow key={order.id}>
+              <TableCell>{order.product.name}</TableCell>
+              <TableCell>{order.user.email}</TableCell>
+              <TableCell>
+                {formatCurrency(order.pricePaidInCents / 100)}
+              </TableCell>
+              <TableCell className="text-center">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <MoreVertical />
+                    <span className="sr-only">Actions</span>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DeleteDropDownItem id={order.id} />
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    )
+  } catch (error) {
+    console.error("Error loading orders:", error)
+    return <p className="text-red-500">Failed to load sales data</p>
+  }
 }

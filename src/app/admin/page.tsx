@@ -49,33 +49,43 @@ async function getProductData() {
 }
 
 export default async function AdminDashboard() {
-  const [salesData, userData, productData] = await Promise.all([
-    getSalesData(),
-    getUserData(),
-    getProductData(),
-  ])
+  try {
+    const [salesData, userData, productData] = await Promise.all([
+      getSalesData(),
+      getUserData(),
+      getProductData(),
+    ])
 
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <DashboardCard
-        title="Sales"
-        subtitle={`${formatNumber(salesData.numberOfSales)} Orders`}
-        body={formatCurrency(salesData.amount)}
-      />
-      <DashboardCard
-        title="Customers"
-        subtitle={`${formatCurrency(
-          userData.averageValuePerUser
-        )} Average Value`}
-        body={formatNumber(userData.userCount)}
-      />
-      <DashboardCard
-        title="Active Products"
-        subtitle={`${formatNumber(productData.inactiveCount)} Inactive`}
-        body={formatNumber(productData.activeCount)}
-      />
-    </div>
-  )
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <DashboardCard
+          title="Sales"
+          subtitle={`${formatNumber(salesData.numberOfSales)} Orders`}
+          body={formatCurrency(salesData.amount)}
+        />
+        <DashboardCard
+          title="Customers"
+          subtitle={`${formatCurrency(
+            userData.averageValuePerUser
+          )} Average Value`}
+          body={formatNumber(userData.userCount)}
+        />
+        <DashboardCard
+          title="Active Products"
+          subtitle={`${formatNumber(productData.inactiveCount)} Inactive`}
+          body={formatNumber(productData.activeCount)}
+        />
+      </div>
+    )
+  } catch (error) {
+    console.error("Error loading dashboard:", error)
+    return (
+      <div className="text-red-500 p-4">
+        <p className="font-semibold">Failed to load dashboard</p>
+        <p className="text-sm">Unable to connect to database. Please try again later.</p>
+      </div>
+    )
+  }
 }
 
 type DashboardCardProps = {
