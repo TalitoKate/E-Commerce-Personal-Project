@@ -8,7 +8,8 @@ export async function GET(
     params: { downloadVerificationId },
   }: { params: { downloadVerificationId: string } }
 ) {
-  const data = await db.downloadVerification.findUnique({
+  // use findFirst because we're filtering by id and expiresAt
+  const data = await db.downloadVerification.findFirst({
     where: { id: downloadVerificationId, expiresAt: { gt: new Date() } },
     select: { product: { select: { filePath: true, name: true } } },
   })
