@@ -45,7 +45,15 @@ export default function ProductsPage() {
 }
 
 async function ProductsSuspense() {
-  const products = await getProducts()
-
-  return products.map(product => <ProductCard key={product.id} {...product} />)
+  try {
+    const products = await getProducts()
+    return (
+      <>
+        {products.map(product => <ProductCard key={product.id} {...product} />)}
+      </>
+    )
+  } catch (error) {
+    console.error("Error loading products:", error)
+    return <div className="text-red-500">Failed to load products</div>
+  }
 }

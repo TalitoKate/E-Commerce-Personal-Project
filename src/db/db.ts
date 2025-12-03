@@ -1,6 +1,9 @@
 import { PrismaClient } from "@prisma/client"
 
 const prismaClientSingleton = () => {
+  if (!process.env.DATABASE_URL) {
+    console.error("DATABASE_URL is not set. Prisma will fail to connect.")
+  }
   return new PrismaClient()
 }
 
