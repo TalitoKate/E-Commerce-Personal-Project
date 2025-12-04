@@ -20,7 +20,7 @@ export default function Layout({
       <Nav>
         <PillNav
           items={[
-            { label: "Home", href: "/" },
+            { label: "Home", href: "/home" },
             { label: "Products", href: "/products" },
             { label: "My Orders", href: "/orders" },
           ]}

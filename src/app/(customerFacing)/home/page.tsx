@@ -8,6 +8,8 @@ import db from "@/db/db"
 import { Product } from "@prisma/client"
 import { cache } from "@/lib/cache"
 
+export const dynamic = "force-dynamic"
+
 const getMostPopularProducts = cache(
   () => {
     return db.product.findMany({
@@ -31,7 +33,38 @@ const getNewestProducts = cache(
   ["/", "getNewestProducts"]
 )
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Test database connection
+  let hasDbConnection = true
+  try {
+    await db.$connect()
+  } catch (error) {
+    console.error("Database connection failed:", error)
+    hasDbConnection = false
+  }
+
+  if (!hasDbConnection) {
+    return (
+      <main className="space-y-12">
+        <div className="flex justify-center">
+          <CurvedLoop
+            marqueeText="Start ✦ Your ✦ Journey ✦ With ✦ Us ✦"
+            className="fill-black"
+            starColor="#483d8b"
+            speed={3}
+            curveAmount={250}
+            direction="right"
+            interactive
+          />
+        </div>
+        <div className="text-center text-red-500 p-8">
+          <h2 className="text-2xl font-bold mb-4">Database Connection Error</h2>
+          <p>Unable to connect to the database. Please check your DATABASE_URL environment variable.</p>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="space-y-12">
       <div className="flex justify-center">
