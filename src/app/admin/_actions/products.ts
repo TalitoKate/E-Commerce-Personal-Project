@@ -20,39 +20,47 @@ const addSchema = z.object({
 })
 
 export async function addProduct(prevState: unknown, formData: FormData) {
-  const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
-  if (result.success === false) {
-    return result.error.formErrors.fieldErrors
-  }
+  try {
+    const result = addSchema.safeParse(Object.fromEntries(formData.entries()))
+    if (result.success === false) {
+      return result.error.formErrors.fieldErrors
+    }
 
-  const data = result.data
+    const data = result.data
 
-  await fs.mkdir("products", { recursive: true })
-  const filePath = `products/${crypto.randomUUID()}-${data.file.name}`
-  
-
-  await fs.mkdir("public/products", { recursive: true })
-  const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
-  await fs.writeFile(
-    `public${imagePath}`,
-    new Uint8Array(await data.image.arrayBuffer())
-  )
-
-  await db.product.create({
-    data: {
-      isAvailableForPurchase: false,
-      name: data.name,
-      description: data.description,
-      priceInCents: data.priceInCents,
+    await fs.mkdir("products", { recursive: true })
+    const filePath = `products/${crypto.randomUUID()}-${data.file.name}`
+    await fs.writeFile(
       filePath,
-      imagePath,
-    },
-  })
+      new Uint8Array(await data.file.arrayBuffer())
+    )
 
-  revalidatePath("/")
-  revalidatePath("/products")
+    await fs.mkdir("public/products", { recursive: true })
+    const imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`
+    await fs.writeFile(
+      `public${imagePath}`,
+      new Uint8Array(await data.image.arrayBuffer())
+    )
 
-  redirect("/admin/products")
+    await db.product.create({
+      data: {
+        isAvailableForPurchase: false,
+        name: data.name,
+        description: data.description,
+        priceInCents: data.priceInCents,
+        filePath,
+        imagePath,
+      },
+    })
+
+    revalidatePath("/")
+    revalidatePath("/products")
+
+    redirect("/admin/products")
+  } catch (error) {
+    console.error("Error adding product:", error)
+    return { _form: ["Failed to add product. Check server logs for details."] }
+  }
 }
 
 const editSchema = addSchema.extend({
