@@ -53,7 +53,7 @@ export function OrderInformation({
         <Img
           width="100%"
           alt={product.name}
-          src={`${process.env.NEXT_PUBLIC_SERVER_URL}${product.imagePath}`}
+          src={product.imagePath.startsWith('http') ? product.imagePath : `${process.env.NEXT_PUBLIC_SERVER_URL}${product.imagePath}`}
         />
         <Row className="mt-8">
           <Column className="align-bottom">
