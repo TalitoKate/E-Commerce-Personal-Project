@@ -59,7 +59,8 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     redirect("/admin/products")
   } catch (error) {
     console.error("Error adding product:", error)
-    return { _form: ["Failed to add product. Check server logs for details."] }
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
+    return { _form: [`Failed to add product: ${errorMessage}`] }
   }
 }
 
@@ -127,7 +128,8 @@ export async function updateProduct(
     redirect("/admin/products")
   } catch (error) {
     console.error("Error updating product:", error)
-    return { _form: ["Failed to update product. Check server logs for details."] }
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
+    return { _form: [`Failed to update product: ${errorMessage}`] }
   }
 }
 
