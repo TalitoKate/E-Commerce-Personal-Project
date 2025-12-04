@@ -55,13 +55,13 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
     revalidatePath("/")
     revalidatePath("/products")
-
-    redirect("/admin/products")
   } catch (error) {
     console.error("Error adding product:", error)
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
     return { _form: [`Failed to add product: ${errorMessage}`] }
   }
+
+  redirect("/admin/products")
 }
 
 const editSchema = addSchema.extend({
@@ -124,13 +124,13 @@ export async function updateProduct(
 
     revalidatePath("/")
     revalidatePath("/products")
-
-    redirect("/admin/products")
   } catch (error) {
     console.error("Error updating product:", error)
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
     return { _form: [`Failed to update product: ${errorMessage}`] }
   }
+
+  redirect("/admin/products")
 }
 
 export async function toggleProductAvailability(
