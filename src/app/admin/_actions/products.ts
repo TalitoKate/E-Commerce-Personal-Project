@@ -54,6 +54,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     })
 
     revalidatePath("/")
+    revalidatePath("/home")
     revalidatePath("/products")
   } catch (error) {
     console.error("Error adding product:", error)
@@ -123,6 +124,7 @@ export async function updateProduct(
     })
 
     revalidatePath("/")
+    revalidatePath("/home")
     revalidatePath("/products")
   } catch (error) {
     console.error("Error updating product:", error)
@@ -140,6 +142,7 @@ export async function toggleProductAvailability(
   await db.product.update({ where: { id }, data: { isAvailableForPurchase } })
 
   revalidatePath("/")
+  revalidatePath("/home")
   revalidatePath("/products")
 }
 
@@ -153,5 +156,6 @@ export async function deleteProduct(id: string) {
   await del(product.imagePath)
 
   revalidatePath("/")
+  revalidatePath("/home")
   revalidatePath("/products")
 }
