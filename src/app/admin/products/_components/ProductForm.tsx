@@ -22,6 +22,9 @@ export function ProductForm({ product }: { product?: Product | null }) {
 
   return (
     <form action={action} className="space-y-8">
+      {"_form" in error && (
+        <div className="text-destructive">{error._form.join(", ")}</div>
+      )}
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
         <Input
@@ -31,7 +34,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
           required
           defaultValue={product?.name || ""}
         />
-        {error.name && <div className="text-destructive">{error.name}</div>}
+        {"name" in error && <div className="text-destructive">{error.name}</div>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="priceInCents">Price In Cents</Label>
@@ -46,7 +49,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
         <div className="text-muted-foreground">
           {formatCurrency((priceInCents || 0) / 100)}
         </div>
-        {error.priceInCents && (
+        {"priceInCents" in error && (
           <div className="text-destructive">{error.priceInCents}</div>
         )}
       </div>
@@ -58,7 +61,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
           required
           defaultValue={product?.description}
         />
-        {error.description && (
+        {"description" in error && (
           <div className="text-destructive">{error.description}</div>
         )}
       </div>
@@ -68,7 +71,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
         {product != null && (
           <div className="text-muted-foreground">{product.filePath}</div>
         )}
-        {error.file && <div className="text-destructive">{error.file}</div>}
+        {"file" in error && <div className="text-destructive">{error.file}</div>}
       </div>
       <div className="space-y-2">
         <Label htmlFor="image">Image</Label>
@@ -81,7 +84,7 @@ export function ProductForm({ product }: { product?: Product | null }) {
             alt="Product Image"
           />
         )}
-        {error.image && <div className="text-destructive">{error.image}</div>}
+        {"image" in error && <div className="text-destructive">{error.image}</div>}
       </div>
       <SubmitButton />
     </form>
