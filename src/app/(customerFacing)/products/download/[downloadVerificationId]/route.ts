@@ -30,7 +30,11 @@ export async function GET(
   }
 
   console.log("Redirecting to file:", data.product.filePath)
+  // Add download parameter to force download instead of inline display
+  const downloadUrl = new URL(data.product.filePath)
+  downloadUrl.searchParams.set('download', '1')
+  
   // filePath is now a Blob URL, redirect to it for download
   // Don't wrap in try-catch as redirect() throws NEXT_REDIRECT which should not be caught
-  redirect(data.product.filePath)
+  redirect(downloadUrl.toString())
 }
