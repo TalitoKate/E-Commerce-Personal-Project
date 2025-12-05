@@ -63,65 +63,81 @@ async function handleSuccessfulPayment({
 }
 
 export async function POST(req: NextRequest) {
+  console.log("Webhook received")
   let event: Stripe.Event
 
   try {
     const body = await req.text()
     const sig = req.headers.get("stripe-signature") as string
 
+    if (!process.env.STRIPE_WEBHOOK_SECRET) {
+      console.error("STRIPE_WEBHOOK_SECRET is not set")
+      return new NextResponse("Configuration Error", { status: 500 })
+    }
+
     event = stripe.webhooks.constructEvent(
       body,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET as string
+      process.env.STRIPE_WEBHOOK_SECRET
     )
+    console.log("Event verified:", event.type)
   } catch (err) {
-    console.error("Webhook signature verification failed", err)
+    console.error("Webhook signature verification failed:", err)
     return new NextResponse("Webhook Error", { status: 400 })
   }
 
 
   try {
     if (event.type === "charge.succeeded") {
+      console.log("Processing charge.succeeded")
       const charge = event.data.object as Stripe.Charge
 
       const productId = charge.metadata.productId
       const email = charge.billing_details.email
       const pricePaidInCents = charge.amount
 
+      console.log("Charge data:", { productId, email, pricePaidInCents })
+
       if (!productId || !email) {
+        console.error("Missing productId or email on charge")
         throw new Error("Missing productId or email on charge")
       }
 
       await handleSuccessfulPayment({ productId, email, pricePaidInCents })
+      console.log("Payment handled successfully")
     }
 
     if (event.type === "payment_intent.succeeded") {
-  const intent = event.data.object as Stripe.PaymentIntent
+      console.log("Processing payment_intent.succeeded")
+      const intent = event.data.object as Stripe.PaymentIntent
 
-  const productId = intent.metadata?.productId
+      const productId = intent.metadata?.productId
 
-  const charges = (intent as any).charges?.data ?? []
+      const charges = (intent as any).charges?.data ?? []
 
-  const email =
-    intent.receipt_email ??
+      const email =
+        intent.receipt_email ??
+        // @ts-ignore
+        intent.customer_email ??
+        charges[0]?.billing_details?.email ??
+        null
 
-    // @ts-ignore
-    intent.customer_email ??
-    charges[0]?.billing_details?.email ??
-    null
+      const pricePaidInCents = intent.amount_received
 
-  const pricePaidInCents = intent.amount_received
+      console.log("Payment intent data:", { productId, email, pricePaidInCents })
 
-  if (!productId || !email) {
-    throw new Error("Missing productId or email on payment_intent")
-  }
+      if (!productId || !email) {
+        console.error("Missing productId or email on payment_intent")
+        throw new Error("Missing productId or email on payment_intent")
+      }
 
-  await handleSuccessfulPayment({ productId, email, pricePaidInCents })
-}
+      await handleSuccessfulPayment({ productId, email, pricePaidInCents })
+      console.log("Payment handled successfully")
+    }
 
     return new NextResponse("OK", { status: 200 })
   } catch (err) {
-    console.error("Error handling webhook", err)
-    return new NextResponse("Webhook handler error", { status: 500 })
+    console.error("Error handling webhook:", err)
+    return new NextResponse(`Webhook handler error: ${err instanceof Error ? err.message : 'Unknown error'}`, { status: 500 })
   }
 }
