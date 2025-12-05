@@ -62,6 +62,8 @@ export async function emailOrderHistory(
       }
     })
 
+    console.log("Sending order history email to:", user.email, "with", user.orders.length, "orders")
+    
     const data = await resend.emails.send({
       from: `Support <${process.env.SENDER_EMAIL}>`,
       to: user.email,
@@ -74,12 +76,16 @@ export async function emailOrderHistory(
       return { error: "There was an error sending your email. Please try again." }
     }
 
+    console.log("Order history email sent successfully")
     return {
       message:
         "Check your email to view your order history and download your products.",
     }
   } catch (error) {
     console.error("Error in emailOrderHistory:", error)
+    if (error instanceof Error) {
+      console.error("Error details:", error.message, error.stack)
+    }
     return { error: "An unexpected error occurred. Please try again later." }
   }
 }

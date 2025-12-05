@@ -10,16 +10,26 @@ export async function GET(
     params: { downloadVerificationId },
   }: { params: { downloadVerificationId: string } }
 ) {
+  console.log("Download requested for ID:", downloadVerificationId)
   try {
     const data = await db.downloadVerification.findFirst({
       where: { id: downloadVerificationId, expiresAt: { gt: new Date() } },
       select: { product: { select: { filePath: true, name: true } } },
     })
 
-    if (!data || !data.product?.filePath || !data.product?.name) {
+    console.log("Download verification found:", !!data)
+    
+    if (!data) {
+      console.log("No download verification found or expired")
+      return NextResponse.redirect(new URL("/products/download/expired", req.url))
+    }
+    
+    if (!data.product?.filePath || !data.product?.name) {
+      console.log("Product data incomplete", { filePath: !!data.product?.filePath, name: !!data.product?.name })
       return NextResponse.redirect(new URL("/products/download/expired", req.url))
     }
 
+    console.log("Redirecting to file:", data.product.filePath)
     // filePath is now a Blob URL, redirect to it for download
     redirect(data.product.filePath)
   } catch (err) {
