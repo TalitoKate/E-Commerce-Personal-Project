@@ -38,7 +38,7 @@ export function ProductCard({
         speed="5s"
         >
       <div className="relative w-full h-auto aspect-video">
-        <Image src={imagePath} fill alt={name} />
+        <Image src={imagePath} fill alt={name} className="object-cover" />
       </div>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
